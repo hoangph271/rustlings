@@ -37,6 +37,32 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.len() == 0 {
+            return Person::default();
+        }
+
+        let parts = s.split(",").collect::<Vec<_>>();
+        let mut parts = parts.iter().cloned();
+
+        match parts.next() {
+            Some(name) => {
+                if name.len() == 0 {
+                    return Person::default();
+                }
+
+                if let Some(age) = parts.next() {
+                    if let Ok(age) = age.parse::<usize>() {
+                        let name = String::from(name);
+                        return Person { name, age };
+                    } else {
+                        return Person::default();
+                    }
+                } else {
+                    return Person::default();
+                }
+            }
+            None => Person::default(),
+        }
     }
 }
 
